@@ -1,0 +1,40 @@
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Node modules
+node_modules/
+functions/node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Firebase config (IMPORTANT: Uncomment if you add real credentials)
+# config.js
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build files
+dist/
+build/
+
+# Temporary files
+*.tmp
+.cache/

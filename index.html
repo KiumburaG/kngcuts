@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNGCuts - Professional Barbershop</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">K</span><span class="barber-pole">I</span><span class="logo-text">NG Cuts</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="bookings.html">Book Now</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><button id="adminLoginBtn" class="admin-btn">Admin Login</button></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="k-letter">K</span><span class="barber-pole-hero">I</span><span class="ng-text">NG</span>
+                <span class="cuts-text">Cuts</span>
+            </h1>
+            <p class="hero-subtitle">Where Style Meets Excellence</p>
+            <p class="hero-description">Premium haircuts, fades, and grooming services</p>
+            <a href="bookings.html" class="cta-button">Book Your Appointment</a>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">✂️</div>
+                    <h3>Fade</h3>
+                    <p>Professional fade cuts with precision and style</p>
+                    <span class="price">$25</span>
+                    <p class="includes">Includes line-up</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🪒</div>
+                    <h3>Buzz Cut</h3>
+                    <p>Clean and sharp buzz cut</p>
+                    <span class="price">$15</span>
+                    <p class="includes">Includes line-up</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">💈</div>
+                    <h3>Trim</h3>
+                    <p>Detailed hair trim and shape-up</p>
+                    <span class="price">$25</span>
+                    <p class="includes">Includes line-up</p>
+                </div>
+            </div>
+
+            <h3 class="extras-title">Add Extra Services</h3>
+            <div class="extras-grid">
+                <div class="extra-card">
+                    <span>Beard Trim/Line-up</span>
+                    <span class="extra-price">+$5</span>
+                </div>
+                <div class="extra-card">
+                    <span>Beard Fade</span>
+                    <span class="extra-price">+$10</span>
+                </div>
+                <div class="extra-card">
+                    <span>Eyebrows (Slits/Shape-up)</span>
+                    <span class="extra-price">+$5</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2 class="section-title">Our Work</h2>
+            <p class="gallery-subtitle">Check out some of our fresh cuts</p>
+            <div id="galleryGrid" class="gallery-grid">
+                <!-- Images will be dynamically loaded here -->
+                <div class="gallery-placeholder">
+                    <p>Gallery images will appear here</p>
+                    <p class="admin-note">Admin: Login to upload your haircut photos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>📍 Location</h3>
+                    <p>84 Pinewood Ave<br>West Long Branch, NJ 07764</p>
+                </div>
+                <div class="contact-item">
+                    <h3>📞 Phone</h3>
+                    <p><a href="tel:+12014140921" style="color: inherit; text-decoration: none;">(201) 414-0921</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3>📧 Email</h3>
+                    <p><a href="mailto:kngcutsbarbershop@gmail.com" style="color: inherit; text-decoration: none;">kngcutsbarbershop@gmail.com</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3>📱 Instagram</h3>
+                    <p><a href="https://instagram.com/kng.cuts" target="_blank" style="color: inherit; text-decoration: none;">@kng.cuts</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 KNGCuts. All rights reserved.</p>
+            <p>Professional Barbershop Services</p>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Admin Login</h2>
+            <div id="googleSignInButton" class="google-signin-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                Sign in with Google
+            </div>
+            <p class="modal-note">Access admin dashboard to manage images and calendar</p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="adminDashboard" class="modal">
+        <div class="modal-content dashboard-content">
+            <span class="close" id="closeDashboard">&times;</span>
+            <h2>Admin Dashboard</h2>
+            <div class="admin-info">
+                <p>Welcome, <span id="adminName"></span></p>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+
+            <div class="admin-sections">
+                <div class="admin-section">
+                    <h3>Upload Haircut Images</h3>
+                    <input type="file" id="imageUpload" accept="image/*" multiple>
+                    <button id="uploadBtn" class="upload-btn">Upload Images</button>
+                    <div id="uploadStatus"></div>
+                </div>
+
+                <div class="admin-section">
+                    <h3>Manage Gallery</h3>
+                    <div id="adminGallery" class="admin-gallery"></div>
+                </div>
+
+                <div class="admin-section">
+                    <h3>Quick Links</h3>
+                    <a href="admin-calendar.html" class="admin-link-btn">Manage Calendar & Availability</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
