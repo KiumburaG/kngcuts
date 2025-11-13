@@ -1,3 +1,5 @@
+// KNGCuts - Static Site JavaScript
+
 // Mobile Navigation
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
@@ -5,243 +7,61 @@ const navMenu = document.querySelector('.nav-menu');
 if (hamburger) {
     hamburger.addEventListener('click', () => {
         navMenu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        });
     });
 }
 
-// Firebase initialization check
-let db, storage, auth;
-
-if (typeof firebase !== 'undefined') {
-    db = firebase.firestore();
-    storage = firebase.storage();
-    auth = firebase.auth();
-} else {
-    console.warn('Firebase not loaded. Some features may not work.');
-}
-
-// Admin Login Modal
+// Admin Login - Simplified (no database)
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const adminModal = document.getElementById('adminModal');
-const adminDashboard = document.getElementById('adminDashboard');
-const googleSignInButton = document.getElementById('googleSignInButton');
-const closeButtons = document.querySelectorAll('.close');
-const logoutBtn = document.getElementById('logoutBtn');
 
-if (adminLoginBtn) {
+if (adminLoginBtn && adminModal) {
     adminLoginBtn.addEventListener('click', () => {
-        adminModal.style.display = 'block';
+        alert('Admin features are currently disabled.\n\nFor a full booking system with admin dashboard, Firebase setup is required.\n\nCurrent version: Simple static site with payment links.');
     });
-}
 
-closeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        adminModal.style.display = 'none';
-        adminDashboard.style.display = 'none';
-    });
-});
-
-window.addEventListener('click', (e) => {
-    if (e.target === adminModal) {
-        adminModal.style.display = 'none';
-    }
-    if (e.target === adminDashboard) {
-        adminDashboard.style.display = 'none';
-    }
-});
-
-// Google Sign In
-if (googleSignInButton) {
-    googleSignInButton.addEventListener('click', async () => {
-        if (!auth) {
-            alert('Firebase authentication not configured. Please see setup instructions.');
-            return;
-        }
-
-        try {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            const result = await auth.signInWithPopup(provider);
-            const user = result.user;
-
-            // Check if user is admin (you should configure this in Firebase)
-            // For now, we'll allow any Google user to access admin
-            document.getElementById('adminName').textContent = user.displayName;
+    // Close modal
+    const closeButtons = document.querySelectorAll('.close');
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
             adminModal.style.display = 'none';
-            adminDashboard.style.display = 'block';
-
-            // Load admin data
-            loadGalleryImages(true);
-        } catch (error) {
-            console.error('Error signing in:', error);
-            alert('Error signing in. Please try again.');
-        }
-    });
-}
-
-// Logout
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-        if (auth) {
-            await auth.signOut();
-            adminDashboard.style.display = 'none';
-            location.reload();
-        }
-    });
-}
-
-// Check auth state
-if (auth) {
-    auth.onAuthStateChanged((user) => {
-        if (user && adminLoginBtn) {
-            adminLoginBtn.textContent = 'Admin Dashboard';
-            adminLoginBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('adminName').textContent = user.displayName;
-                adminDashboard.style.display = 'block';
-                loadGalleryImages(true);
-            });
-        }
-    });
-}
-
-// Image Upload
-const imageUpload = document.getElementById('imageUpload');
-const uploadBtn = document.getElementById('uploadBtn');
-const uploadStatus = document.getElementById('uploadStatus');
-
-if (uploadBtn) {
-    uploadBtn.addEventListener('click', async () => {
-        if (!storage || !db) {
-            alert('Firebase not configured. Please see setup instructions.');
-            return;
-        }
-
-        const files = imageUpload.files;
-        if (files.length === 0) {
-            alert('Please select images to upload');
-            return;
-        }
-
-        uploadStatus.innerHTML = '<p>Uploading...</p>';
-
-        try {
-            for (let file of files) {
-                const storageRef = storage.ref(`gallery/${Date.now()}_${file.name}`);
-                await storageRef.put(file);
-                const url = await storageRef.getDownloadURL();
-
-                // Save to Firestore
-                await db.collection('gallery').add({
-                    url: url,
-                    filename: file.name,
-                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            }
-
-            uploadStatus.innerHTML = '<p class="success-message">Images uploaded successfully!</p>';
-            imageUpload.value = '';
-            loadGalleryImages(true);
-            loadGalleryImages(false);
-
-            setTimeout(() => {
-                uploadStatus.innerHTML = '';
-            }, 3000);
-        } catch (error) {
-            console.error('Error uploading:', error);
-            uploadStatus.innerHTML = '<p class="error-message">Error uploading images. Please try again.</p>';
-        }
-    });
-}
-
-// Load Gallery Images
-async function loadGalleryImages(isAdmin = false) {
-    if (!db) return;
-
-    const galleryContainer = isAdmin ?
-        document.getElementById('adminGallery') :
-        document.getElementById('galleryGrid');
-
-    if (!galleryContainer) return;
-
-    try {
-        const snapshot = await db.collection('gallery')
-            .orderBy('uploadedAt', 'desc')
-            .get();
-
-        if (snapshot.empty) {
-            if (!isAdmin) {
-                galleryContainer.innerHTML = `
-                    <div class="gallery-placeholder">
-                        <p>Gallery images will appear here</p>
-                        <p class="admin-note">Admin: Login to upload your haircut photos</p>
-                    </div>
-                `;
-            }
-            return;
-        }
-
-        galleryContainer.innerHTML = '';
-
-        snapshot.forEach(doc => {
-            const data = doc.data();
-
-            if (isAdmin) {
-                const item = document.createElement('div');
-                item.className = 'admin-gallery-item';
-                item.innerHTML = `
-                    <img src="${data.url}" alt="Haircut">
-                    <button class="delete-img-btn" onclick="deleteImage('${doc.id}', '${data.url}')">Delete</button>
-                `;
-                galleryContainer.appendChild(item);
-            } else {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.innerHTML = `<img src="${data.url}" alt="Haircut by KNGCuts">`;
-                galleryContainer.appendChild(item);
-            }
         });
-    } catch (error) {
-        console.error('Error loading gallery:', error);
-    }
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === adminModal) {
+            adminModal.style.display = 'none';
+        }
+    });
 }
 
-// Delete Image
-async function deleteImage(docId, imageUrl) {
-    if (!confirm('Are you sure you want to delete this image?')) return;
-
-    if (!storage || !db) return;
-
-    try {
-        // Delete from Storage
-        const imageRef = storage.refFromURL(imageUrl);
-        await imageRef.delete();
-
-        // Delete from Firestore
-        await db.collection('gallery').doc(docId).delete();
-
-        // Reload galleries
-        loadGalleryImages(true);
-        loadGalleryImages(false);
-
-        alert('Image deleted successfully');
-    } catch (error) {
-        console.error('Error deleting image:', error);
-        alert('Error deleting image. Please try again.');
-    }
-}
-
-// Make deleteImage globally available
-window.deleteImage = deleteImage;
-
-// Load gallery on page load
-if (document.getElementById('galleryGrid')) {
-    loadGalleryImages(false);
+// Gallery Placeholder
+const galleryGrid = document.getElementById('galleryGrid');
+if (galleryGrid && !galleryGrid.querySelector('.gallery-item')) {
+    galleryGrid.innerHTML = `
+        <div class="gallery-placeholder">
+            <p>📸 Gallery photos coming soon!</p>
+            <p class="admin-note">Upload your haircut photos to showcase your work</p>
+        </div>
+    `;
 }
 
 // Smooth Scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+        const target = document.querySelector(href);
         if (target) {
             target.scrollIntoView({
                 behavior: 'smooth',
@@ -266,12 +86,35 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe elements
-document.querySelectorAll('.service-card, .gallery-item, .contact-item').forEach(el => {
+// Observe elements for fade-in animation
+document.querySelectorAll('.service-card, .gallery-item, .contact-item, .extra-card').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
 });
 
-console.log('KNGCuts website loaded successfully!');
+// Add active navbar highlighting on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-menu a');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (window.pageYOffset >= (sectionTop - 100)) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+        }
+    });
+});
+
+console.log('KNGCuts website loaded successfully! ✂️');

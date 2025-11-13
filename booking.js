@@ -1,4 +1,4 @@
-// Booking System JavaScript
+// Booking System JavaScript - Static Version
 
 // State Management
 let bookingData = {
@@ -18,14 +18,6 @@ let bookingData = {
 let currentStep = 1;
 let currentDate = new Date();
 let selectedDate = null;
-
-// Firebase initialization
-let db;
-if (typeof firebase !== 'undefined') {
-    db = firebase.firestore();
-} else {
-    console.warn('Firebase not loaded');
-}
 
 // Step Navigation
 function nextStep() {
@@ -47,6 +39,11 @@ function nextStep() {
     // Update summary if on step 3
     if (currentStep === 3) {
         updateBookingSummary();
+    }
+
+    // Update confirmation details if on step 4
+    if (currentStep === 4) {
+        updateConfirmationDetails();
     }
 
     // Scroll to top
@@ -100,11 +97,6 @@ function validateStep(step) {
             return false;
         }
 
-        if (!email.includes('@')) {
-            alert('Please enter a valid email address');
-            return false;
-        }
-
         // Save customer data
         bookingData.customerName = name;
         bookingData.customerEmail = email;
@@ -117,436 +109,271 @@ function validateStep(step) {
     return true;
 }
 
-// Service Selection & Price Calculator
-const haircutRadios = document.querySelectorAll('input[name="haircut"]');
-const extrasCheckboxes = document.querySelectorAll('input[name="extras"]');
-const subtotalEl = document.getElementById('subtotal');
-const totalPriceEl = document.getElementById('totalPrice');
+// Service Selection
+document.addEventListener('DOMContentLoaded', function() {
+    // Service selection handlers
+    const haircutRadios = document.querySelectorAll('input[name="haircut"]');
+    const extrasCheckboxes = document.querySelectorAll('input[name="extras"]');
 
-haircutRadios.forEach(radio => {
-    radio.addEventListener('change', (e) => {
-        const serviceOption = e.target.closest('.service-option');
-        bookingData.haircut = serviceOption.dataset.service;
-        bookingData.haircutPrice = parseFloat(serviceOption.dataset.price);
-        updatePrice();
+    haircutRadios.forEach(radio => {
+        radio.addEventListener('change', updatePricing);
+    });
+
+    extrasCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updatePricing);
+    });
+
+    // Initialize calendar
+    renderCalendar();
+
+    // Calendar navigation
+    document.getElementById('prevMonth').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
     });
 });
 
-extrasCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', (e) => {
-        const extraPrice = parseFloat(e.target.dataset.price);
-        const extraValue = e.target.value;
+function updatePricing() {
+    let total = 0;
 
-        if (e.target.checked) {
-            bookingData.extras.push({
-                name: extraValue,
-                price: extraPrice
-            });
-        } else {
-            bookingData.extras = bookingData.extras.filter(extra => extra.name !== extraValue);
-        }
+    // Get selected haircut
+    const selectedHaircut = document.querySelector('input[name="haircut"]:checked');
+    if (selectedHaircut) {
+        const price = parseInt(selectedHaircut.closest('.service-option').dataset.price);
+        bookingData.haircut = selectedHaircut.value;
+        bookingData.haircutPrice = price;
+        total += price;
+    }
 
-        updatePrice();
+    // Get selected extras
+    const selectedExtras = document.querySelectorAll('input[name="extras"]:checked');
+    bookingData.extras = [];
+    bookingData.extrasTotal = 0;
+
+    selectedExtras.forEach(extra => {
+        const price = parseInt(extra.dataset.price);
+        bookingData.extras.push({
+            name: extra.value,
+            price: price
+        });
+        bookingData.extrasTotal += price;
+        total += price;
     });
-});
 
-function updatePrice() {
-    bookingData.extrasTotal = bookingData.extras.reduce((sum, extra) => sum + extra.price, 0);
-    bookingData.total = bookingData.haircutPrice + bookingData.extrasTotal;
+    bookingData.total = total;
 
-    if (subtotalEl) {
-        subtotalEl.textContent = `$${bookingData.total.toFixed(2)}`;
-    }
-    if (totalPriceEl) {
-        totalPriceEl.textContent = `$${bookingData.total.toFixed(2)}`;
-    }
+    // Update display
+    document.getElementById('subtotal').textContent = `$${total.toFixed(2)}`;
+    document.getElementById('totalPrice').textContent = `$${total.toFixed(2)}`;
 }
 
-// Calendar Functions
+// Calendar Rendering
 function renderCalendar() {
-    const calendar = document.getElementById('calendar');
-    const currentMonthEl = document.getElementById('currentMonth');
-
-    if (!calendar || !currentMonthEl) return;
-
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    currentMonthEl.textContent = new Date(year, month).toLocaleDateString('en-US', {
-        month: 'long',
-        year: 'numeric'
-    });
+    // Update header
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+    document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
 
-    calendar.innerHTML = '';
-
-    // Add day headers
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    days.forEach(day => {
-        const dayEl = document.createElement('div');
-        dayEl.className = 'calendar-day header';
-        dayEl.textContent = day;
-        calendar.appendChild(dayEl);
-    });
-
-    // Get first day of month and number of days
+    // Get first day and number of days
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+
+    // Build calendar HTML
+    let calendarHTML = '<div class="calendar-days">';
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    // Add day names
+    dayNames.forEach(day => {
+        calendarHTML += `<div class="calendar-day-name">${day}</div>`;
+    });
 
     // Add empty cells for days before month starts
     for (let i = 0; i < firstDay; i++) {
-        const emptyDay = document.createElement('div');
-        emptyDay.className = 'calendar-day';
-        calendar.appendChild(emptyDay);
+        calendarHTML += '<div class="calendar-day empty"></div>';
     }
 
     // Add days of month
+    for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const isPast = date < today.setHours(0, 0, 0, 0);
+        const isSelected = selectedDate &&
+                          selectedDate.getDate() === day &&
+                          selectedDate.getMonth() === month &&
+                          selectedDate.getFullYear() === year;
+
+        let classes = 'calendar-day';
+        if (isPast) classes += ' disabled';
+        if (isSelected) classes += ' selected';
+
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        calendarHTML += `<div class="${classes}" data-date="${dateStr}" onclick="selectDate('${dateStr}')">${day}</div>`;
+    }
+
+    calendarHTML += '</div>';
+    document.getElementById('calendar').innerHTML = calendarHTML;
+}
+
+function selectDate(dateStr) {
+    const date = new Date(dateStr);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    for (let day = 1; day <= daysInMonth; day++) {
-        const dayEl = document.createElement('div');
-        dayEl.className = 'calendar-day';
-        dayEl.textContent = day;
+    if (date < today) return;
 
-        const dateObj = new Date(year, month, day);
-
-        // Disable past dates
-        if (dateObj < today) {
-            dayEl.classList.add('disabled');
-        } else {
-            dayEl.classList.add('available');
-            dayEl.addEventListener('click', () => selectDate(dateObj, dayEl));
-        }
-
-        calendar.appendChild(dayEl);
-    }
-}
-
-function selectDate(date, element) {
-    // Remove previous selection
-    document.querySelectorAll('.calendar-day.selected').forEach(el => {
-        el.classList.remove('selected');
-    });
-
-    // Add selection
-    element.classList.add('selected');
     selectedDate = date;
-    bookingData.date = date.toLocaleDateString('en-US');
+    bookingData.date = dateStr;
 
-    // Load time slots for selected date
-    loadTimeSlots(date);
+    // Update calendar display
+    renderCalendar();
+
+    // Show time slots
+    renderTimeSlots();
 
     // Enable next button
-    document.getElementById('step2Next').disabled = false;
+    if (bookingData.time) {
+        document.getElementById('step2Next').disabled = false;
+    }
 }
 
-async function loadTimeSlots(date) {
+window.selectDate = selectDate;
+
+function renderTimeSlots() {
     const timeSlotsContainer = document.getElementById('timeSlots');
-    if (!timeSlotsContainer) return;
 
-    // Get day of week
-    const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    const times = [
+        '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+        '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'
+    ];
 
-    timeSlotsContainer.innerHTML = '<h3>Available Times</h3>';
+    let html = '<h3>Select Time</h3><div class="time-slots-grid">';
 
-    // Default hours (you can load from Firestore in production)
-    const defaultHours = {
-        monday: { start: '09:00', end: '18:00' },
-        tuesday: { start: '09:00', end: '18:00' },
-        wednesday: { start: '09:00', end: '18:00' },
-        thursday: { start: '09:00', end: '18:00' },
-        friday: { start: '09:00', end: '18:00' },
-        saturday: { start: '10:00', end: '16:00' },
-        sunday: null
-    };
+    times.forEach(time => {
+        const isSelected = bookingData.time === time;
+        const selectedClass = isSelected ? 'selected' : '';
 
-    const hours = defaultHours[dayName];
-
-    if (!hours) {
-        timeSlotsContainer.innerHTML += '<p>No availability on this day</p>';
-        return;
-    }
-
-    // Generate time slots (40-minute intervals)
-    const timeGrid = document.createElement('div');
-    timeGrid.className = 'time-grid';
-
-    const [startHourStr, startMinStr] = hours.start.split(':');
-    const [endHourStr, endMinStr] = hours.end.split(':');
-
-    const startMinutes = parseInt(startHourStr) * 60 + parseInt(startMinStr);
-    const endMinutes = parseInt(endHourStr) * 60 + parseInt(endMinStr);
-
-    // Get existing bookings for this date
-    let bookedTimes = [];
-    if (db) {
-        try {
-            const snapshot = await db.collection('appointments')
-                .where('date', '==', date.toLocaleDateString('en-US'))
-                .get();
-
-            bookedTimes = snapshot.docs.map(doc => doc.data().time);
-        } catch (error) {
-            console.error('Error loading bookings:', error);
-        }
-    }
-
-    // Generate slots every 40 minutes
-    for (let minutes = startMinutes; minutes < endMinutes; minutes += 40) {
-        const hour = Math.floor(minutes / 60);
-        const minute = minutes % 60;
-
-        const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        const displayTime = new Date(`2000-01-01 ${timeStr}`).toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit'
-        });
-
-        const timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot';
-        timeSlot.textContent = displayTime;
-
-        if (bookedTimes.includes(displayTime)) {
-            timeSlot.classList.add('booked');
-        } else {
-            timeSlot.addEventListener('click', () => selectTime(displayTime, timeSlot));
-        }
-
-        timeGrid.appendChild(timeSlot);
-    }
-
-    timeSlotsContainer.appendChild(timeGrid);
-}
-
-function selectTime(time, element) {
-    // Remove previous selection
-    document.querySelectorAll('.time-slot.selected').forEach(el => {
-        el.classList.remove('selected');
+        html += `<button type="button" class="time-slot ${selectedClass}" onclick="selectTime('${time}')">${time}</button>`;
     });
 
-    // Add selection
-    element.classList.add('selected');
+    html += '</div>';
+    timeSlotsContainer.innerHTML = html;
+}
+
+function selectTime(time) {
     bookingData.time = time;
 
+    // Update display
+    renderTimeSlots();
+
     // Enable next button
     document.getElementById('step2Next').disabled = false;
 }
 
-// Calendar navigation
-document.getElementById('prevMonth')?.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar();
-});
+window.selectTime = selectTime;
 
-document.getElementById('nextMonth')?.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar();
-});
-
-// Initialize calendar
-renderCalendar();
-
-// Update Booking Summary
 function updateBookingSummary() {
-    const haircutNames = {
-        fade: 'Fade',
-        buzz: 'Buzz Cut',
-        trim: 'Trim'
+    // Update service
+    const haircutLabels = {
+        'fade': 'Fade',
+        'buzz': 'Buzz Cut',
+        'trim': 'Trim'
     };
+    document.getElementById('summaryService').textContent = haircutLabels[bookingData.haircut] || '-';
 
-    document.getElementById('summaryService').textContent =
-        haircutNames[bookingData.haircut] || '-';
-
+    // Update extras
     if (bookingData.extras.length > 0) {
-        const extrasContainer = document.getElementById('summaryExtrasContainer');
-        const extrasEl = document.getElementById('summaryExtras');
-        extrasContainer.style.display = 'flex';
-
-        const extrasNames = {
-            beardTrim: 'Beard Trim/Line-up',
-            beardFade: 'Beard Fade',
-            eyebrows: 'Eyebrows'
-        };
-
-        extrasEl.textContent = bookingData.extras
-            .map(extra => extrasNames[extra.name])
-            .join(', ');
+        const extrasText = bookingData.extras.map(e => {
+            const labels = {
+                'beardTrim': 'Beard Trim/Line-up',
+                'beardFade': 'Beard Fade',
+                'eyebrows': 'Eyebrows'
+            };
+            return labels[e.name];
+        }).join(', ');
+        document.getElementById('summaryExtras').textContent = extrasText;
+        document.getElementById('summaryExtrasContainer').style.display = 'flex';
+    } else {
+        document.getElementById('summaryExtrasContainer').style.display = 'none';
     }
 
-    document.getElementById('summaryDate').textContent = bookingData.date || '-';
-    document.getElementById('summaryTime').textContent = bookingData.time || '-';
+    // Update date and time
+    const dateObj = new Date(bookingData.date);
+    const dateStr = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    document.getElementById('summaryDate').textContent = dateStr;
+    document.getElementById('summaryTime').textContent = bookingData.time;
+
+    // Update total
     document.getElementById('summaryTotal').textContent = `$${bookingData.total.toFixed(2)}`;
 }
 
-// Payment Methods
-const paymentOptions = document.querySelectorAll('.payment-option');
-let selectedPaymentMethod = null;
+function updateConfirmationDetails() {
+    // Update confirmation details on payment page
+    document.getElementById('confirmName').textContent = bookingData.customerName || '-';
 
-paymentOptions.forEach(option => {
-    option.addEventListener('click', () => {
-        paymentOptions.forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
-        selectedPaymentMethod = option.dataset.method;
+    const haircutLabels = {
+        'fade': 'Fade',
+        'buzz': 'Buzz Cut',
+        'trim': 'Trim'
+    };
 
-        // Show payment processor
-        const processor = document.getElementById('paymentProcessor');
-        processor.style.display = 'block';
-        processor.innerHTML = getPaymentProcessorHTML(selectedPaymentMethod);
-    });
-});
-
-function getPaymentProcessorHTML(method) {
-    switch (method) {
-        case 'paypal':
-            return `
-                <h4>PayPal Payment</h4>
-                <div id="paypal-button-container"></div>
-                <p class="payment-note">You will be redirected to PayPal to complete the $5 deposit</p>
-            `;
-        case 'venmo':
-            return `
-                <h4>Venmo Payment</h4>
-                <p>Venmo Username: <strong>@KNGCuts</strong></p>
-                <p>Amount: <strong>$5.00</strong></p>
-                <p>Note: Include your name and appointment date</p>
-                <input type="text" placeholder="Enter Venmo transaction ID" id="venmoTransactionId" style="width: 100%; padding: 0.8rem; margin: 1rem 0; border: 2px solid #ddd; border-radius: 5px;">
-            `;
-        case 'cashapp':
-            return `
-                <h4>Cash App Payment</h4>
-                <p>Cash App: <strong>$KNGCuts</strong></p>
-                <p>Amount: <strong>$5.00</strong></p>
-                <p>Note: Include your name and appointment date</p>
-                <input type="text" placeholder="Enter Cash App transaction ID" id="cashappTransactionId" style="width: 100%; padding: 0.8rem; margin: 1rem 0; border: 2px solid #ddd; border-radius: 5px;">
-            `;
-        case 'card':
-            return `
-                <h4>Credit/Debit Card</h4>
-                <div class="card-form">
-                    <input type="text" placeholder="Card Number" id="cardNumber" style="width: 100%; padding: 0.8rem; margin: 0.5rem 0; border: 2px solid #ddd; border-radius: 5px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <input type="text" placeholder="MM/YY" id="cardExpiry" style="padding: 0.8rem; border: 2px solid #ddd; border-radius: 5px;">
-                        <input type="text" placeholder="CVV" id="cardCvv" style="padding: 0.8rem; border: 2px solid #ddd; border-radius: 5px;">
-                    </div>
-                    <input type="text" placeholder="Cardholder Name" id="cardName" style="width: 100%; padding: 0.8rem; margin: 0.5rem 0; border: 2px solid #ddd; border-radius: 5px;">
-                </div>
-            `;
-        default:
-            return '';
+    let serviceText = haircutLabels[bookingData.haircut] || '';
+    if (bookingData.extras.length > 0) {
+        const extrasLabels = {
+            'beardTrim': 'Beard Trim/Line-up',
+            'beardFade': 'Beard Fade',
+            'eyebrows': 'Eyebrows'
+        };
+        const extrasText = bookingData.extras.map(e => extrasLabels[e.name]).join(', ');
+        serviceText += ' + ' + extrasText;
     }
+    document.getElementById('confirmService').textContent = serviceText;
+
+    const dateObj = new Date(bookingData.date);
+    const dateStr = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    document.getElementById('confirmDateTime').textContent = `${dateStr} at ${bookingData.time}`;
+
+    document.getElementById('confirmTotal').textContent = `$${bookingData.total.toFixed(2)}`;
 }
 
-// Terms Agreement
-document.getElementById('agreeTerms')?.addEventListener('change', (e) => {
-    const payBtn = document.getElementById('payDepositBtn');
-    if (e.target.checked && selectedPaymentMethod) {
-        payBtn.disabled = false;
-    } else {
-        payBtn.disabled = true;
-    }
-});
+function copyBookingDetails() {
+    const details = `
+KNGCuts Booking Details:
 
-// Payment & Booking Submission
-document.getElementById('payDepositBtn')?.addEventListener('click', async () => {
-    if (!selectedPaymentMethod) {
-        alert('Please select a payment method');
-        return;
-    }
+Name: ${bookingData.customerName}
+Phone: ${bookingData.customerPhone}
+Email: ${bookingData.customerEmail}
 
-    if (!document.getElementById('agreeTerms').checked) {
-        alert('Please agree to the booking terms');
-        return;
-    }
+Service: ${document.getElementById('confirmService').textContent}
+Date & Time: ${document.getElementById('confirmDateTime').textContent}
+Total: ${document.getElementById('confirmTotal').textContent}
 
-    // Confirm booking
-    const confirmMsg = `
-Please confirm your booking:
-
-Service: ${bookingData.haircut}
-Extras: ${bookingData.extras.map(e => e.name).join(', ') || 'None'}
-Date: ${bookingData.date}
-Time: ${bookingData.time}
-Total: $${bookingData.total.toFixed(2)}
-
-A $5 deposit will be charged now.
+${bookingData.notes ? 'Notes: ' + bookingData.notes : ''}
     `.trim();
 
-    if (!confirm(confirmMsg)) {
-        return;
-    }
+    // Copy to clipboard
+    navigator.clipboard.writeText(details).then(() => {
+        const btn = document.querySelector('.copy-details-btn');
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.background = '#27ae60';
 
-    // Process payment and create booking
-    const payBtn = document.getElementById('payDepositBtn');
-    payBtn.disabled = true;
-    payBtn.textContent = 'Processing...';
-
-    try {
-        // In production, process payment here
-        // For now, simulate payment
-        await simulatePayment();
-
-        // Save booking to Firestore
-        if (db) {
-            const bookingRef = await db.collection('appointments').add({
-                ...bookingData,
-                paymentMethod: selectedPaymentMethod,
-                depositPaid: true,
-                depositAmount: 5,
-                status: 'confirmed',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            // Send notification email (you'll need to set up Cloud Functions for this)
-            await sendNotification(bookingRef.id);
-        }
-
-        // Show success and redirect
-        showSuccessPage();
-    } catch (error) {
-        console.error('Error processing booking:', error);
-        alert('Error processing booking. Please try again.');
-        payBtn.disabled = false;
-        payBtn.textContent = 'Pay $5 Deposit & Confirm Booking';
-    }
-});
-
-async function simulatePayment() {
-    // Simulate payment processing delay
-    return new Promise(resolve => setTimeout(resolve, 2000));
-}
-
-async function sendNotification(bookingId) {
-    // This would trigger a Cloud Function to send emails/SMS
-    // For now, we'll just log it
-    console.log('Notification sent for booking:', bookingId);
-
-    // In production, you would call a Cloud Function:
-    /*
-    await fetch('YOUR_CLOUD_FUNCTION_URL', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            bookingId,
-            adminEmail: 'your-email@gmail.com',
-            adminPhone: 'your-phone-number',
-            bookingData
-        })
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+        }, 2000);
+    }).catch(err => {
+        alert('Could not copy details. Please copy manually.');
+        console.error('Copy failed:', err);
     });
-    */
 }
 
-function showSuccessPage() {
-    // Redirect to success page
-    const successData = encodeURIComponent(JSON.stringify({
-        service: bookingData.haircut,
-        date: bookingData.date,
-        time: bookingData.time,
-        total: bookingData.total,
-        name: bookingData.customerName
-    }));
-
-    window.location.href = `booking-success.html?data=${successData}`;
-}
-
-// Initialize
-console.log('Booking system loaded');
+window.copyBookingDetails = copyBookingDetails;
