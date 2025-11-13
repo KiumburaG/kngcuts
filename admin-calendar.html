@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Calendar - KNGCuts</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">K</span><span class="barber-pole">I</span><span class="logo-text">NG Cuts</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#" class="active">Admin Calendar</a></li>
+                <li><button id="logoutBtn" class="admin-btn">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="admin-calendar-container">
+        <div class="admin-header">
+            <h1>Manage Calendar & Availability</h1>
+            <p>Set your available hours and manage appointments</p>
+        </div>
+
+        <div class="calendar-management">
+            <div class="availability-section">
+                <h2>Set Weekly Availability</h2>
+                <div class="weekly-schedule">
+                    <div class="day-schedule">
+                        <label>
+                            <input type="checkbox" class="day-toggle" data-day="monday" checked>
+                            <span class="day-name">Monday</span>
+                        </label>
+                        <div class="time-inputs">
+                            <input type="time" class="start-time" data-day="monday" value="09:00">
+                            <span>to</span>
+                            <input type="time" class="end-time" data-day="monday" value="18:00">
+                        </div>
+                    </div>
+
+                    <div class="day-schedule">
+                        <label>
+                            <input type="checkbox" class="day-toggle" data-day="tuesday" checked>
+                            <span class="day-name">Tuesday</span>
+                        </label>
+                        <div class="time-inputs">
+                            <input type="time" class="start-time" data-day="tuesday" value="09:00">
+                            <span>to</span>
+                            <input type="time" class="end-time" data-day="tuesday" value="18:00">
+                        </div>
+                    </div>
+
+                    <div class="day-schedule">
+                        <label>
+                            <input type="checkbox" class="day-toggle" data-day="wednesday" checked>
+                            <span class="day-name">Wednesday</span>
+                        </label>
+                        <div class="time-inputs">
+                            <input type="time" class="start-time" data-day="wednesday" value="09:00">
+                            <span>to</span>
+                            <input type="time" class="end-time" data-day="wednesday" value="18:00">
+                        </div>
+                    </div>
+
+                    <div class="day-schedule">
+                        <label>
+                            <input type="checkbox" class="day-toggle" data-day="thursday" checked>
+                            <span class="day-name">Thursday</span>
+                        </label>
+                        <div class="time-inputs">
+                            <input type="time" class="start-time" data-day="thursday" value="09:00">
+                            <span>to</span>
+                            <input type="time" class="end-time" data-day="thursday" value="18:00">
+                        </div>
+                    </div>
+
+                    <div class="day-schedule">
+                        <label>
+                            <input type="checkbox" class="day-toggle" data-day="friday" checked>
+                            <span class="day-name">Friday</span>
+                        </label>
+                        <div class="time-inputs">
+                            <input type="time" class="start-time" data-day="friday" value="09:00">
+                            <span>to</span>
+                            <input type="time" class="end-time" data-day="friday" value="18:00">
+                        </div>
+                    </div>
+
+                    <div class="day-schedule">
+                        <label>
+                            <input type="checkbox" class="day-toggle" data-day="saturday" checked>
+                            <span class="day-name">Saturday</span>
+                        </label>
+                        <div class="time-inputs">
+                            <input type="time" class="start-time" data-day="saturday" value="10:00">
+                            <span>to</span>
+                            <input type="time" class="end-time" data-day="saturday" value="16:00">
+                        </div>
+                    </div>
+
+                    <div class="day-schedule">
+                        <label>
+                            <input type="checkbox" class="day-toggle" data-day="sunday">
+                            <span class="day-name">Sunday</span>
+                        </label>
+                        <div class="time-inputs">
+                            <input type="time" class="start-time" data-day="sunday" value="10:00" disabled>
+                            <span>to</span>
+                            <input type="time" class="end-time" data-day="sunday" value="16:00" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="saveSchedule" class="save-btn">Save Weekly Schedule</button>
+            </div>
+
+            <div class="blocked-dates-section">
+                <h2>Block Specific Dates</h2>
+                <p>Block dates when you're unavailable (vacation, holidays, etc.)</p>
+                <div class="block-date-form">
+                    <input type="date" id="blockDate" min="">
+                    <input type="text" id="blockReason" placeholder="Reason (optional)">
+                    <button id="addBlockBtn">Block Date</button>
+                </div>
+                <div id="blockedDatesList" class="blocked-dates-list">
+                    <!-- Blocked dates will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="appointments-section">
+            <h2>Upcoming Appointments</h2>
+            <div id="appointmentsList" class="appointments-list">
+                <!-- Appointments will be loaded here -->
+                <div class="no-appointments">
+                    <p>No upcoming appointments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 KNGCuts. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="admin-calendar.js"></script>
+</body>
+</html>

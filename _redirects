@@ -1,0 +1,8 @@
+# Redirect all paths to their respective HTML files
+/               /index.html           200
+/bookings       /bookings.html        200
+/admin-calendar /admin-calendar.html  200
+/booking-success /booking-success.html 200
+
+# Fallback for all other routes
+/*              /index.html           200
