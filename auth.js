@@ -216,34 +216,3 @@ document.getElementById('forgotPassword').addEventListener('click', async (e) =>
     }
 })();
 
-// Google OAuth
-document.getElementById('googleSignIn').addEventListener('click', async () => {
-    if (!supabase) return;
-    try {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: window.location.origin + '/' + getRedirect()
-            }
-        });
-        if (error) throw error;
-    } catch (error) {
-        showToast('Google sign-in failed: ' + error.message, 'error');
-    }
-});
-
-// Apple OAuth
-document.getElementById('appleSignIn').addEventListener('click', async () => {
-    if (!supabase) return;
-    try {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'apple',
-            options: {
-                redirectTo: window.location.origin + '/' + getRedirect()
-            }
-        });
-        if (error) throw error;
-    } catch (error) {
-        showToast('Apple sign-in failed: ' + error.message, 'error');
-    }
-});
