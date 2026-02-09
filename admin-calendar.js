@@ -228,10 +228,11 @@ document.getElementById('saveSchedule')?.addEventListener('click', async functio
     }
 
     try {
-        await supabaseFetch('settings', 'POST', {
-            key: 'schedule',
-            value: schedule
-        });
+        const { error } = await supabase
+            .from('settings')
+            .upsert({ key: 'schedule', value: schedule }, { onConflict: 'key' });
+
+        if (error) throw error;
 
         weeklySchedule = schedule;
         renderAdminCalendar();
