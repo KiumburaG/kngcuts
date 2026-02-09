@@ -237,9 +237,13 @@
 }
 
 [data-theme="dark"] .availability-section,
-[data-theme="dark"] .blocked-dates-section,
 [data-theme="dark"] .appointments-section {
     background: #1a1a1a;
+}
+
+[data-theme="dark"] .blocked-dates-section {
+    background: #1a1a1a;
+    border-color: rgba(231, 76, 60, 0.3);
 }
 
 [data-theme="dark"] .day-schedule {
@@ -1880,12 +1884,31 @@ body {
     gap: 2rem;
 }
 
-.availability-section,
-.blocked-dates-section {
+.availability-section {
     background: var(--white);
     padding: 2rem;
     border-radius: 15px;
     box-shadow: var(--shadow);
+}
+
+.blocked-dates-section {
+    background: var(--white);
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1.5px solid rgba(231, 76, 60, 0.2);
+}
+
+.blocked-dates-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.blocked-dates-header h3 {
+    font-size: 1.05rem;
+    color: var(--heading-color);
+    margin: 0;
 }
 
 .weekly-schedule {
@@ -1959,53 +1982,89 @@ body {
 
 .block-date-form {
     display: flex;
-    gap: 1rem;
-    margin: 1.5rem 0;
+    gap: 0.5rem;
+    align-items: flex-end;
+    margin-bottom: 0.75rem;
+}
+
+.block-date-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
 }
 
 .block-date-form input[type="date"],
 .block-date-form input[type="text"] {
-    padding: 0.8rem;
-    border: 2px solid #ddd;
-    border-radius: 5px;
+    padding: 0.55rem 0.7rem;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
     font-family: 'Poppins', sans-serif;
-    flex: 1;
+    font-size: 0.85rem;
+    width: 100%;
 }
 
 #addBlockBtn {
     background: #e74c3c;
-    color: var(--white);
+    color: white;
     border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
+    padding: 0.55rem 1.2rem;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+    font-size: 0.85rem;
     white-space: nowrap;
+    transition: background 0.2s;
+    align-self: stretch;
+}
+
+#addBlockBtn:hover {
+    background: #c0392b;
 }
 
 .blocked-dates-list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .blocked-date-item {
     background: var(--light-bg);
-    padding: 1rem;
-    border-radius: 5px;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-left: 3px solid #e74c3c;
+}
+
+.blocked-date-item strong {
+    font-size: 0.85rem;
+}
+
+.blocked-date-item p {
+    font-size: 0.78rem !important;
+    margin-top: 0.15rem !important;
 }
 
 .remove-block-btn {
-    background: #e74c3c;
-    color: var(--white);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
+    background: none;
+    color: #e74c3c;
+    border: 1.5px solid #e74c3c;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.remove-block-btn:hover {
+    background: #e74c3c;
+    color: white;
 }
 
 .appointments-section {
