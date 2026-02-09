@@ -59,6 +59,10 @@ let currentDate = new Date();
 let selectedDate = null;
 let blockedDates = []; // Array of { date, reason }
 let bookedSlots = {};
+let weeklySchedule = null; // Loaded from admin settings
+
+// Map JS getDay() (0=Sun) to schedule key names
+const DAY_NAMES = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 const PROGRESS_KEY = 'kngcuts-booking-progress';
 const PROGRESS_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -283,6 +287,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load blocked dates from Supabase
     loadBlockedDates();
 
+    // Load admin's weekly schedule (also re-renders calendar when done)
+    loadWeeklySchedule();
+
     // Initialize calendar
     renderCalendar();
 
@@ -491,6 +498,80 @@ function getBlockedReason(dateStr) {
     return found ? found.reason : '';
 }
 
+// ==================== WEEKLY SCHEDULE ====================
+
+// Load admin's weekly schedule from settings table
+async function loadWeeklySchedule() {
+    if (!supabase) return;
+
+    try {
+        const { data, error } = await supabase
+            .from('settings')
+            .select('value')
+            .eq('key', 'schedule')
+            .single();
+
+        if (error && error.code !== 'PGRST116') throw error;
+
+        if (data && data.value) {
+            weeklySchedule = data.value;
+        }
+        renderCalendar();
+    } catch (err) {
+        console.error('Error loading weekly schedule:', err);
+    }
+}
+
+// Check if a given day of week is closed in the schedule
+function isDayClosed(date) {
+    if (!weeklySchedule) return false; // If no schedule set, default to open
+    const dayName = DAY_NAMES[date.getDay()];
+    const dayConfig = weeklySchedule[dayName];
+    if (!dayConfig) return false;
+    return !dayConfig.enabled;
+}
+
+// Get the schedule config for a given date's day of week
+function getDaySchedule(date) {
+    if (!weeklySchedule) return null;
+    const dayName = DAY_NAMES[date.getDay()];
+    return weeklySchedule[dayName] || null;
+}
+
+// Generate hourly time slots from schedule start/end times
+function generateTimeSlots(dayScheduleConfig) {
+    if (!dayScheduleConfig || !dayScheduleConfig.enabled) return { morning: [], afternoon: [] };
+
+    const startHour = parseInt(dayScheduleConfig.start.split(':')[0], 10);
+    const endHour = parseInt(dayScheduleConfig.end.split(':')[0], 10);
+
+    let breakStartHour = null;
+    let breakEndHour = null;
+    if (dayScheduleConfig.breakEnabled && dayScheduleConfig.breakStart && dayScheduleConfig.breakEnd) {
+        breakStartHour = parseInt(dayScheduleConfig.breakStart.split(':')[0], 10);
+        breakEndHour = parseInt(dayScheduleConfig.breakEnd.split(':')[0], 10);
+    }
+
+    const morning = [];
+    const afternoon = [];
+
+    for (let h = startHour; h < endHour; h++) {
+        if (breakStartHour !== null && h >= breakStartHour && h < breakEndHour) continue;
+
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const hour12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+        const label = `${hour12}:00 ${ampm}`;
+
+        if (h < 12) {
+            morning.push(label);
+        } else {
+            afternoon.push(label);
+        }
+    }
+
+    return { morning, afternoon };
+}
+
 // Fetch booked time slots for a specific date
 async function loadBookedSlots(dateStr) {
     if (!supabase) return [];
@@ -604,7 +685,8 @@ function renderCalendar() {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const isBlocked = isDateBlocked(dateStr);
         const blockedReason = isBlocked ? getBlockedReason(dateStr) : '';
-        const isUnavailable = isPast || isToday || isBlocked || isBeyondMax;
+        const isClosed = isDayClosed(date);
+        const isUnavailable = isPast || isToday || isBlocked || isBeyondMax || isClosed;
 
         let classes = 'calendar-day';
         if (isPast || isBeyondMax) classes += ' past';
@@ -612,10 +694,11 @@ function renderCalendar() {
         if (isUnavailable) classes += ' disabled';
         if (isSelected) classes += ' selected';
         if (isBlocked) classes += ' blocked';
+        if (isClosed && !isPast && !isBeyondMax) classes += ' closed';
         if (!isUnavailable) classes += ' available';
 
         const onclick = isUnavailable ? '' : `onclick="selectDate(${year}, ${month + 1}, ${day})"`;
-        const tooltip = isBlocked ? `title="${blockedReason}"` : '';
+        const tooltip = isBlocked ? `title="${blockedReason}"` : (isClosed ? 'title="Closed"' : '');
 
         calendarHTML += `<div class="${classes}" data-date="${dateStr}" ${onclick} ${tooltip}>${day}</div>`;
     }
@@ -659,8 +742,25 @@ function renderTimeSlots(booked) {
     const timeSlotsContainer = document.getElementById('timeSlots');
     booked = booked || [];
 
-    const morningTimes = ['9:00 AM', '10:00 AM', '11:00 AM'];
-    const afternoonTimes = ['12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
+    // Generate time slots from admin schedule or fall back to defaults
+    let morningTimes, afternoonTimes;
+
+    if (selectedDate && weeklySchedule) {
+        const dayScheduleConfig = getDaySchedule(selectedDate);
+        if (dayScheduleConfig && dayScheduleConfig.enabled) {
+            const slots = generateTimeSlots(dayScheduleConfig);
+            morningTimes = slots.morning;
+            afternoonTimes = slots.afternoon;
+        } else {
+            // Day is closed — shouldn't reach here but handle gracefully
+            timeSlotsContainer.innerHTML = '<h3>Select Time</h3><p style="text-align:center;color:#999;padding:1rem;">This day is closed.</p>';
+            return;
+        }
+    } else {
+        // Fallback defaults if no schedule loaded
+        morningTimes = ['9:00 AM', '10:00 AM', '11:00 AM'];
+        afternoonTimes = ['12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
+    }
 
     function buildSlots(times) {
         let html = '';
@@ -681,12 +781,22 @@ function renderTimeSlots(booked) {
     }
 
     let html = '<h3>Select Time</h3>';
-    html += '<div class="time-slot-group"><h4>Morning</h4><div class="time-slots-grid">';
-    html += buildSlots(morningTimes);
-    html += '</div></div>';
-    html += '<div class="time-slot-group"><h4>Afternoon</h4><div class="time-slots-grid">';
-    html += buildSlots(afternoonTimes);
-    html += '</div></div>';
+
+    if (morningTimes.length > 0) {
+        html += '<div class="time-slot-group"><h4>Morning</h4><div class="time-slots-grid">';
+        html += buildSlots(morningTimes);
+        html += '</div></div>';
+    }
+
+    if (afternoonTimes.length > 0) {
+        html += '<div class="time-slot-group"><h4>Afternoon</h4><div class="time-slots-grid">';
+        html += buildSlots(afternoonTimes);
+        html += '</div></div>';
+    }
+
+    if (morningTimes.length === 0 && afternoonTimes.length === 0) {
+        html += '<p style="text-align:center;color:#999;padding:1rem;">No available time slots for this day.</p>';
+    }
 
     timeSlotsContainer.innerHTML = html;
 }

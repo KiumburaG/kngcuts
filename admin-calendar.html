@@ -33,111 +33,228 @@
                 Back to Dashboard
             </a>
             <h1>Manage Calendar & Availability</h1>
-            <p>Set your available hours and manage appointments</p>
+            <p>Set your available hours, manage blocked dates, and preview what clients see</p>
         </div>
 
-        <div class="calendar-management">
-            <div class="availability-section">
-                <h2>Set Weekly Availability</h2>
-                <div class="weekly-schedule">
-                    <div class="day-schedule">
-                        <label>
-                            <input type="checkbox" class="day-toggle" data-day="monday" checked>
-                            <span class="day-name">Monday</span>
-                        </label>
-                        <div class="time-inputs">
-                            <input type="time" class="start-time" data-day="monday" value="09:00">
-                            <span>to</span>
-                            <input type="time" class="end-time" data-day="monday" value="18:00">
+        <div class="calendar-workspace">
+            <!-- LEFT COLUMN: Schedule + Block Dates -->
+            <div class="workspace-left">
+                <div class="availability-section">
+                    <h2>Weekly Schedule</h2>
+                    <div class="weekly-schedule">
+                        <div class="day-schedule">
+                            <label>
+                                <input type="checkbox" class="day-toggle" data-day="monday" checked>
+                                <span class="day-name">Monday</span>
+                            </label>
+                            <div class="time-inputs">
+                                <input type="time" class="start-time" data-day="monday" value="09:00">
+                                <span>to</span>
+                                <input type="time" class="end-time" data-day="monday" value="18:00">
+                            </div>
+                            <div class="break-time-controls">
+                                <label class="break-label">
+                                    <input type="checkbox" class="break-toggle" data-day="monday">
+                                    <span>Break</span>
+                                </label>
+                                <div class="break-time-inputs">
+                                    <input type="time" class="break-start" data-day="monday" value="12:00" disabled>
+                                    <span>-</span>
+                                    <input type="time" class="break-end" data-day="monday" value="13:00" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="day-schedule">
+                            <label>
+                                <input type="checkbox" class="day-toggle" data-day="tuesday" checked>
+                                <span class="day-name">Tuesday</span>
+                            </label>
+                            <div class="time-inputs">
+                                <input type="time" class="start-time" data-day="tuesday" value="09:00">
+                                <span>to</span>
+                                <input type="time" class="end-time" data-day="tuesday" value="18:00">
+                            </div>
+                            <div class="break-time-controls">
+                                <label class="break-label">
+                                    <input type="checkbox" class="break-toggle" data-day="tuesday">
+                                    <span>Break</span>
+                                </label>
+                                <div class="break-time-inputs">
+                                    <input type="time" class="break-start" data-day="tuesday" value="12:00" disabled>
+                                    <span>-</span>
+                                    <input type="time" class="break-end" data-day="tuesday" value="13:00" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="day-schedule">
+                            <label>
+                                <input type="checkbox" class="day-toggle" data-day="wednesday" checked>
+                                <span class="day-name">Wednesday</span>
+                            </label>
+                            <div class="time-inputs">
+                                <input type="time" class="start-time" data-day="wednesday" value="09:00">
+                                <span>to</span>
+                                <input type="time" class="end-time" data-day="wednesday" value="18:00">
+                            </div>
+                            <div class="break-time-controls">
+                                <label class="break-label">
+                                    <input type="checkbox" class="break-toggle" data-day="wednesday">
+                                    <span>Break</span>
+                                </label>
+                                <div class="break-time-inputs">
+                                    <input type="time" class="break-start" data-day="wednesday" value="12:00" disabled>
+                                    <span>-</span>
+                                    <input type="time" class="break-end" data-day="wednesday" value="13:00" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="day-schedule">
+                            <label>
+                                <input type="checkbox" class="day-toggle" data-day="thursday" checked>
+                                <span class="day-name">Thursday</span>
+                            </label>
+                            <div class="time-inputs">
+                                <input type="time" class="start-time" data-day="thursday" value="09:00">
+                                <span>to</span>
+                                <input type="time" class="end-time" data-day="thursday" value="18:00">
+                            </div>
+                            <div class="break-time-controls">
+                                <label class="break-label">
+                                    <input type="checkbox" class="break-toggle" data-day="thursday">
+                                    <span>Break</span>
+                                </label>
+                                <div class="break-time-inputs">
+                                    <input type="time" class="break-start" data-day="thursday" value="12:00" disabled>
+                                    <span>-</span>
+                                    <input type="time" class="break-end" data-day="thursday" value="13:00" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="day-schedule">
+                            <label>
+                                <input type="checkbox" class="day-toggle" data-day="friday" checked>
+                                <span class="day-name">Friday</span>
+                            </label>
+                            <div class="time-inputs">
+                                <input type="time" class="start-time" data-day="friday" value="09:00">
+                                <span>to</span>
+                                <input type="time" class="end-time" data-day="friday" value="18:00">
+                            </div>
+                            <div class="break-time-controls">
+                                <label class="break-label">
+                                    <input type="checkbox" class="break-toggle" data-day="friday">
+                                    <span>Break</span>
+                                </label>
+                                <div class="break-time-inputs">
+                                    <input type="time" class="break-start" data-day="friday" value="12:00" disabled>
+                                    <span>-</span>
+                                    <input type="time" class="break-end" data-day="friday" value="13:00" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="day-schedule">
+                            <label>
+                                <input type="checkbox" class="day-toggle" data-day="saturday" checked>
+                                <span class="day-name">Saturday</span>
+                            </label>
+                            <div class="time-inputs">
+                                <input type="time" class="start-time" data-day="saturday" value="10:00">
+                                <span>to</span>
+                                <input type="time" class="end-time" data-day="saturday" value="16:00">
+                            </div>
+                            <div class="break-time-controls">
+                                <label class="break-label">
+                                    <input type="checkbox" class="break-toggle" data-day="saturday">
+                                    <span>Break</span>
+                                </label>
+                                <div class="break-time-inputs">
+                                    <input type="time" class="break-start" data-day="saturday" value="12:00" disabled>
+                                    <span>-</span>
+                                    <input type="time" class="break-end" data-day="saturday" value="13:00" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="day-schedule">
+                            <label>
+                                <input type="checkbox" class="day-toggle" data-day="sunday">
+                                <span class="day-name">Sunday</span>
+                            </label>
+                            <div class="time-inputs">
+                                <input type="time" class="start-time" data-day="sunday" value="10:00" disabled>
+                                <span>to</span>
+                                <input type="time" class="end-time" data-day="sunday" value="16:00" disabled>
+                            </div>
+                            <div class="break-time-controls">
+                                <label class="break-label">
+                                    <input type="checkbox" class="break-toggle" data-day="sunday" disabled>
+                                    <span>Break</span>
+                                </label>
+                                <div class="break-time-inputs">
+                                    <input type="time" class="break-start" data-day="sunday" value="12:00" disabled>
+                                    <span>-</span>
+                                    <input type="time" class="break-end" data-day="sunday" value="13:00" disabled>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="day-schedule">
-                        <label>
-                            <input type="checkbox" class="day-toggle" data-day="tuesday" checked>
-                            <span class="day-name">Tuesday</span>
-                        </label>
-                        <div class="time-inputs">
-                            <input type="time" class="start-time" data-day="tuesday" value="09:00">
-                            <span>to</span>
-                            <input type="time" class="end-time" data-day="tuesday" value="18:00">
-                        </div>
-                    </div>
-
-                    <div class="day-schedule">
-                        <label>
-                            <input type="checkbox" class="day-toggle" data-day="wednesday" checked>
-                            <span class="day-name">Wednesday</span>
-                        </label>
-                        <div class="time-inputs">
-                            <input type="time" class="start-time" data-day="wednesday" value="09:00">
-                            <span>to</span>
-                            <input type="time" class="end-time" data-day="wednesday" value="18:00">
-                        </div>
-                    </div>
-
-                    <div class="day-schedule">
-                        <label>
-                            <input type="checkbox" class="day-toggle" data-day="thursday" checked>
-                            <span class="day-name">Thursday</span>
-                        </label>
-                        <div class="time-inputs">
-                            <input type="time" class="start-time" data-day="thursday" value="09:00">
-                            <span>to</span>
-                            <input type="time" class="end-time" data-day="thursday" value="18:00">
-                        </div>
-                    </div>
-
-                    <div class="day-schedule">
-                        <label>
-                            <input type="checkbox" class="day-toggle" data-day="friday" checked>
-                            <span class="day-name">Friday</span>
-                        </label>
-                        <div class="time-inputs">
-                            <input type="time" class="start-time" data-day="friday" value="09:00">
-                            <span>to</span>
-                            <input type="time" class="end-time" data-day="friday" value="18:00">
-                        </div>
-                    </div>
-
-                    <div class="day-schedule">
-                        <label>
-                            <input type="checkbox" class="day-toggle" data-day="saturday" checked>
-                            <span class="day-name">Saturday</span>
-                        </label>
-                        <div class="time-inputs">
-                            <input type="time" class="start-time" data-day="saturday" value="10:00">
-                            <span>to</span>
-                            <input type="time" class="end-time" data-day="saturday" value="16:00">
-                        </div>
-                    </div>
-
-                    <div class="day-schedule">
-                        <label>
-                            <input type="checkbox" class="day-toggle" data-day="sunday">
-                            <span class="day-name">Sunday</span>
-                        </label>
-                        <div class="time-inputs">
-                            <input type="time" class="start-time" data-day="sunday" value="10:00" disabled>
-                            <span>to</span>
-                            <input type="time" class="end-time" data-day="sunday" value="16:00" disabled>
-                        </div>
-                    </div>
+                    <button id="saveSchedule" class="save-btn">Save Weekly Schedule</button>
                 </div>
 
-                <button id="saveSchedule" class="save-btn">Save Weekly Schedule</button>
+                <div class="blocked-dates-section">
+                    <h2>Block Specific Dates</h2>
+                    <p>Block dates when you're unavailable (vacation, holidays, etc.)</p>
+                    <div class="block-date-form">
+                        <input type="date" id="blockDate" min="">
+                        <input type="text" id="blockReason" placeholder="Reason (optional)">
+                        <button id="addBlockBtn">Block Date</button>
+                    </div>
+                    <div id="blockedDatesList" class="blocked-dates-list">
+                        <!-- Blocked dates will appear here -->
+                    </div>
+                </div>
             </div>
 
-            <div class="blocked-dates-section">
-                <h2>Block Specific Dates</h2>
-                <p>Block dates when you're unavailable (vacation, holidays, etc.)</p>
-                <div class="block-date-form">
-                    <input type="date" id="blockDate" min="">
-                    <input type="text" id="blockReason" placeholder="Reason (optional)">
-                    <button id="addBlockBtn">Block Date</button>
+            <!-- RIGHT COLUMN: Calendar Overview + Client Preview -->
+            <div class="workspace-right">
+                <div class="admin-visual-calendar">
+                    <h2>Calendar Overview</h2>
+                    <div class="admin-calendar-nav">
+                        <button id="adminPrevMonth" class="cal-nav-btn">&lsaquo;</button>
+                        <span id="adminCalendarMonth">February 2026</span>
+                        <button id="adminNextMonth" class="cal-nav-btn">&rsaquo;</button>
+                    </div>
+                    <div id="adminCalendar" class="admin-calendar-grid">
+                        <!-- Calendar grid rendered by JS -->
+                    </div>
+                    <div class="calendar-legend">
+                        <span class="legend-item"><span class="legend-dot legend-open"></span> Open</span>
+                        <span class="legend-item"><span class="legend-dot legend-closed"></span> Closed</span>
+                        <span class="legend-item"><span class="legend-dot legend-blocked"></span> Blocked</span>
+                        <span class="legend-item"><span class="legend-dot legend-past"></span> Past</span>
+                    </div>
                 </div>
-                <div id="blockedDatesList" class="blocked-dates-list">
-                    <!-- Blocked dates will appear here -->
+
+                <div class="client-preview-panel">
+                    <h2>Client Preview</h2>
+                    <p class="preview-subtitle">What customers see when booking</p>
+                    <div class="preview-calendar-nav">
+                        <button id="previewPrevMonth" class="cal-nav-btn">&lsaquo;</button>
+                        <span id="previewCalendarMonth">February 2026</span>
+                        <button id="previewNextMonth" class="cal-nav-btn">&rsaquo;</button>
+                    </div>
+                    <div id="previewCalendar" class="preview-calendar-grid">
+                        <!-- Preview calendar rendered by JS -->
+                    </div>
+                    <div id="previewTimeSlots" class="preview-time-slots">
+                        <p class="preview-hint">Click a date above to see available time slots</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -149,6 +266,19 @@
                 <div class="no-appointments">
                     <p>No upcoming appointments</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Block Reason Popup -->
+    <div id="blockReasonPopup" class="block-reason-popup" style="display:none;">
+        <div class="block-reason-modal">
+            <h3>Block Date</h3>
+            <p id="blockReasonDate"></p>
+            <input type="text" id="blockReasonInput" placeholder="Reason (optional)">
+            <div class="block-reason-actions">
+                <button id="blockReasonCancel" class="confirm-btn-cancel">Cancel</button>
+                <button id="blockReasonConfirm" class="confirm-btn-danger">Block</button>
             </div>
         </div>
     </div>

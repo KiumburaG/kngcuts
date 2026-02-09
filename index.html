@@ -23,6 +23,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <h1 class="loading-logo"><span class="loading-k">K</span><span class="loading-i">I</span><span class="loading-ng">NG</span> <span class="loading-cuts">Cuts</span></h1>
+            <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo" style="text-decoration:none;">
@@ -177,5 +185,27 @@
     <script src="dark-mode.js"></script>
     <script src="live-bg.js"></script>
     <script src="script.js"></script>
+    <script>
+    // Fade out loading screen once page is ready
+    (function() {
+        var screen = document.getElementById('loadingScreen');
+        if (!screen) return;
+
+        function dismiss() {
+            screen.classList.add('fade-out');
+            setTimeout(function() { screen.remove(); }, 600);
+        }
+
+        // Wait for fonts + DOM to be fully ready
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(dismiss);
+        } else {
+            window.addEventListener('load', dismiss);
+        }
+
+        // Safety fallback — never block longer than 3s
+        setTimeout(dismiss, 3000);
+    })();
+    </script>
 </body>
 </html>

@@ -322,8 +322,80 @@
 body {
     font-family: 'Poppins', sans-serif;
     color: var(--text-color);
+    background: #ffffff;
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+/* ==================== LOADING SCREEN ==================== */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loading-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-logo {
+    font-family: 'Playfair Display', 'Poppins', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #f5f5f5;
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.loading-k,
+.loading-ng {
+    color: #f5f5f5;
+}
+
+.loading-i {
+    color: #D4AF37;
+    font-style: italic;
+}
+
+.loading-cuts {
+    color: #D4AF37;
+    font-style: italic;
+}
+
+.loading-bar {
+    width: 180px;
+    height: 3px;
+    background: #333;
+    border-radius: 3px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.loading-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #D4AF37, #f0d060);
+    border-radius: 3px;
+    animation: loadingFill 1.2s ease-out forwards;
+}
+
+@keyframes loadingFill {
+    0% { width: 0%; }
+    60% { width: 70%; }
+    100% { width: 100%; }
 }
 
 /* Navigation */
@@ -1793,6 +1865,21 @@ body {
     margin-bottom: 3rem;
 }
 
+/* ==================== ADMIN CALENDAR WORKSPACE ==================== */
+.calendar-workspace {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.workspace-left,
+.workspace-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
 .availability-section,
 .blocked-dates-section {
     background: var(--white);
@@ -1811,9 +1898,10 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     background: var(--light-bg);
     border-radius: 10px;
+    flex-wrap: wrap;
 }
 
 .day-schedule label {
@@ -2385,6 +2473,44 @@ body {
 }
 
 .calendar-day.blocked[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    border: 5px solid transparent;
+    border-top-color: #333;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.calendar-day.closed {
+    color: #999;
+    cursor: not-allowed;
+    position: relative;
+}
+
+[data-theme="dark"] .calendar-day.closed {
+    color: #555;
+}
+
+.calendar-day.closed[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.calendar-day.closed[title]:hover::before {
     content: '';
     position: absolute;
     bottom: 100%;
@@ -4478,4 +4604,577 @@ body {
 
 .disclaimer-modal p strong {
     color: var(--primary-color);
+}
+
+/* ==================== BREAK TIME CONTROLS ==================== */
+.break-time-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.break-label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    color: var(--muted-text);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.break-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.break-time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.break-time-inputs input[type="time"] {
+    padding: 0.3rem;
+    border: 1.5px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    width: 100px;
+}
+
+.break-time-inputs input[type="time"]:disabled {
+    background: #f5f5f5;
+    color: #bbb;
+    border-color: #eee;
+}
+
+.break-time-inputs span {
+    font-size: 0.8rem;
+    color: var(--muted-text);
+}
+
+[data-theme="dark"] .break-time-inputs input[type="time"] {
+    background: #2a2a2a;
+    border-color: var(--input-border);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .break-time-inputs input[type="time"]:disabled {
+    background: #1a1a1a;
+    color: #555;
+    border-color: #333;
+}
+
+/* ==================== ADMIN VISUAL CALENDAR ==================== */
+.admin-visual-calendar,
+.client-preview-panel {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+.admin-visual-calendar h2,
+.client-preview-panel h2 {
+    font-size: 1.3rem;
+    color: var(--heading-color);
+    margin-bottom: 1rem;
+}
+
+.admin-calendar-nav,
+.preview-calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.admin-calendar-nav span,
+.preview-calendar-nav span {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--heading-color);
+}
+
+.cal-nav-btn {
+    background: none;
+    border: 1.5px solid var(--primary-color);
+    color: var(--primary-color);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.cal-nav-btn:hover {
+    background: var(--primary-color);
+    color: #1a1a1a;
+}
+
+.admin-calendar-grid,
+.preview-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.admin-cal-header,
+.preview-cal-header {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted-text);
+    padding: 0.25rem 0;
+    text-transform: uppercase;
+}
+
+.admin-cal-day,
+.preview-cal-day {
+    text-align: center;
+    padding: 0.5rem 0.25rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.15s;
+    position: relative;
+}
+
+.admin-cal-day.empty,
+.preview-cal-day.empty {
+    visibility: hidden;
+}
+
+/* Admin calendar day states */
+.admin-cal-day.open {
+    background: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+}
+
+.admin-cal-day.closed {
+    background: #f0f0f0;
+    color: #999;
+}
+
+.admin-cal-day.blocked {
+    background: rgba(231, 76, 60, 0.15);
+    color: #c0392b;
+    text-decoration: line-through;
+}
+
+.admin-cal-day.past {
+    color: #ccc;
+    pointer-events: none;
+}
+
+.admin-cal-day.today {
+    font-weight: 700;
+    box-shadow: inset 0 0 0 2px var(--primary-color);
+}
+
+.admin-cal-day.clickable {
+    cursor: pointer;
+}
+
+.admin-cal-day.clickable:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+}
+
+.admin-cal-day.open.clickable:hover {
+    background: rgba(231, 76, 60, 0.25);
+    color: #c0392b;
+}
+
+.admin-cal-day.blocked.clickable:hover {
+    background: rgba(46, 204, 113, 0.25);
+    color: #27ae60;
+    text-decoration: none;
+}
+
+/* Calendar legend */
+.calendar-legend {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--muted-text);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-open {
+    background: #27ae60;
+}
+
+.legend-closed {
+    background: #ccc;
+}
+
+.legend-blocked {
+    background: #e74c3c;
+}
+
+.legend-past {
+    background: #eee;
+    border: 1px solid #ddd;
+}
+
+/* ==================== CLIENT PREVIEW ==================== */
+.client-preview-panel {
+    border: 2px dashed var(--primary-color);
+    position: relative;
+}
+
+.preview-subtitle {
+    font-size: 0.85rem;
+    color: var(--muted-text);
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+/* Preview calendar day states — mirror booking calendar */
+.preview-cal-day.available {
+    background: var(--light-bg);
+    color: var(--heading-color);
+    cursor: pointer;
+}
+
+.preview-cal-day.available:hover {
+    background: var(--primary-color);
+    color: #1a1a1a;
+    transform: scale(1.05);
+}
+
+.preview-cal-day.selected {
+    background: var(--primary-color);
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.preview-cal-day.disabled {
+    color: #ccc;
+    pointer-events: none;
+}
+
+.preview-cal-day.closed {
+    color: #bbb;
+}
+
+.preview-cal-day.blocked {
+    color: #ccc;
+}
+
+.preview-cal-day.today {
+    font-weight: 700;
+    box-shadow: inset 0 0 0 2px var(--primary-color);
+}
+
+.preview-cal-day.past {
+    color: #ddd;
+}
+
+/* Preview time slots */
+.preview-time-slots {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--card-border);
+}
+
+.preview-time-slots h4 {
+    font-size: 0.95rem;
+    color: var(--heading-color);
+    margin-bottom: 0.75rem;
+}
+
+.preview-hint {
+    text-align: center;
+    color: var(--muted-text);
+    font-size: 0.85rem;
+    padding: 1rem 0;
+    font-style: italic;
+}
+
+.preview-slot-group {
+    margin-bottom: 0.75rem;
+}
+
+.preview-slot-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted-text);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.preview-slots-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.preview-time-slot {
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--light-bg);
+    color: var(--heading-color);
+    border: 1px solid var(--card-border);
+}
+
+.preview-time-slot.booked {
+    background: #f0f0f0;
+    color: #999;
+    text-decoration: line-through;
+    border-color: #e0e0e0;
+}
+
+.preview-time-slot.booked small {
+    text-decoration: none;
+}
+
+.preview-loading {
+    text-align: center;
+    padding: 1rem;
+}
+
+.preview-loading p {
+    font-size: 0.85rem;
+    color: var(--muted-text);
+    margin-top: 0.5rem;
+}
+
+/* ==================== BLOCK REASON POPUP ==================== */
+.block-reason-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: confirmFadeIn 0.2s ease;
+}
+
+.block-reason-modal {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-lg);
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+}
+
+.block-reason-modal h3 {
+    color: var(--heading-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.block-reason-modal p {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.block-reason-modal input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--input-border);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    background: var(--light-bg);
+    color: var(--text-color);
+}
+
+.block-reason-modal input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.block-reason-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.block-reason-actions button {
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+}
+
+/* ==================== DARK MODE — ADMIN CALENDAR ==================== */
+[data-theme="dark"] .admin-visual-calendar,
+[data-theme="dark"] .client-preview-panel {
+    background: #1a1a1a;
+}
+
+[data-theme="dark"] .client-preview-panel {
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .admin-cal-day.open {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+[data-theme="dark"] .admin-cal-day.closed {
+    background: #222;
+    color: #666;
+}
+
+[data-theme="dark"] .admin-cal-day.blocked {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+[data-theme="dark"] .admin-cal-day.past {
+    color: #444;
+}
+
+[data-theme="dark"] .legend-closed {
+    background: #555;
+}
+
+[data-theme="dark"] .legend-past {
+    background: #333;
+    border-color: #444;
+}
+
+[data-theme="dark"] .preview-cal-day.available {
+    background: #222;
+    color: var(--heading-color);
+}
+
+[data-theme="dark"] .preview-cal-day.disabled {
+    color: #444;
+}
+
+[data-theme="dark"] .preview-cal-day.closed,
+[data-theme="dark"] .preview-cal-day.blocked {
+    color: #444;
+}
+
+[data-theme="dark"] .preview-cal-day.past {
+    color: #333;
+}
+
+[data-theme="dark"] .preview-time-slot {
+    background: #222;
+    color: #ddd;
+    border-color: #333;
+}
+
+[data-theme="dark"] .preview-time-slot.booked {
+    background: #1a1a1a;
+    color: #555;
+    border-color: #2a2a2a;
+}
+
+[data-theme="dark"] .block-reason-modal {
+    background: #1a1a1a;
+}
+
+[data-theme="dark"] .block-reason-modal input[type="text"] {
+    background: #222;
+    border-color: var(--input-border);
+    color: var(--text-color);
+}
+
+/* ==================== RESPONSIVE — ADMIN CALENDAR ==================== */
+@media (max-width: 1024px) {
+    .calendar-workspace {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .calendar-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .day-schedule {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .break-time-controls {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .time-inputs {
+        width: 100%;
+    }
+
+    .admin-calendar-grid,
+    .preview-calendar-grid {
+        gap: 2px;
+    }
+
+    .admin-cal-day,
+    .preview-cal-day {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.15rem;
+    }
+
+    .admin-cal-header,
+    .preview-cal-header {
+        font-size: 0.65rem;
+    }
+
+    .calendar-legend {
+        gap: 0.5rem;
+    }
+
+    .legend-item {
+        font-size: 0.7rem;
+    }
+
+    .preview-slots-row {
+        gap: 0.25rem;
+    }
+
+    .preview-time-slot {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .block-date-form {
+        flex-direction: column;
+    }
 }
