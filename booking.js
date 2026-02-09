@@ -217,6 +217,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ===== AUTH GATE: require sign-in to book =====
+    function showAuthGate() {
+        const overlay = document.createElement('div');
+        overlay.className = 'confirm-overlay';
+        overlay.id = 'authGateOverlay';
+        overlay.innerHTML = `
+            <div class="confirm-modal disclaimer-modal">
+                <div class="confirm-modal-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <h3>Sign In Required</h3>
+                <p>You need an account to book an appointment. Sign in or create a free account to continue.</p>
+                <div class="confirm-modal-actions">
+                    <button class="confirm-btn-cancel" id="authGateHome">Back to Home</button>
+                    <button class="confirm-btn-save" id="authGateSignIn">Sign In / Register</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        document.getElementById('authGateSignIn').addEventListener('click', () => {
+            window.location.href = 'auth.html?redirect=bookings.html';
+        });
+        document.getElementById('authGateHome').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
+
+    function checkAuthAndInit() {
+        if (typeof window.kngAuth === 'undefined' || !window.kngAuth.isLoggedIn()) {
+            showAuthGate();
+            return;
+        }
+        // Remove auth gate if it exists (e.g. user signed in and came back)
+        const existing = document.getElementById('authGateOverlay');
+        if (existing) existing.remove();
+    }
+
+    // Wait for auth state to be ready
+    if (typeof window.kngAuth !== 'undefined' && window.kngAuth.isLoggedIn()) {
+        // Already ready and logged in
+    } else {
+        // Listen for auth ready event
+        window.addEventListener('kng-auth-ready', checkAuthAndInit);
+        // Also check after a short timeout in case event already fired
+        setTimeout(checkAuthAndInit, 1500);
+    }
+
     const haircutRadios = document.querySelectorAll('input[name="haircut"]');
     const extrasCheckboxes = document.querySelectorAll('input[name="extras"]');
 
@@ -842,6 +893,9 @@ async function handlePaymentSubmit() {
     spinner.style.display = 'inline-block';
 
     try {
+        // Save pending booking data BEFORE payment in case of redirect (CashApp, etc.)
+        localStorage.setItem('kngcuts-pending-booking', JSON.stringify(bookingData));
+
         const { error, paymentIntent } = await stripe.confirmPayment({
             elements: stripeElements,
             confirmParams: {
@@ -858,11 +912,13 @@ async function handlePaymentSubmit() {
         });
 
         if (error) {
+            localStorage.removeItem('kngcuts-pending-booking');
             showToast(error.message, 'error');
             resetPayButton();
         } else if (paymentIntent) {
             console.log('Payment intent status:', paymentIntent.status);
             if (paymentIntent.status === 'succeeded' || paymentIntent.status === 'processing') {
+                localStorage.removeItem('kngcuts-pending-booking');
                 showToast('Payment successful! Saving your booking...', 'success');
                 await confirmBooking('stripe', paymentIntent.id);
             } else if (paymentIntent.status === 'requires_action') {
