@@ -218,7 +218,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ===== AUTH GATE: require sign-in to book =====
+    let authGateShown = false;
+
     function showAuthGate() {
+        // Prevent duplicate overlays
+        if (authGateShown || document.getElementById('authGateOverlay')) return;
+        authGateShown = true;
+
         const overlay = document.createElement('div');
         overlay.className = 'confirm-overlay';
         overlay.id = 'authGateOverlay';
@@ -249,24 +255,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function checkAuthAndInit() {
-        if (typeof window.kngAuth === 'undefined' || !window.kngAuth.isLoggedIn()) {
-            showAuthGate();
+        if (typeof window.kngAuth !== 'undefined' && window.kngAuth.isLoggedIn()) {
+            // Logged in — remove auth gate if it exists
+            const existing = document.getElementById('authGateOverlay');
+            if (existing) existing.remove();
             return;
         }
-        // Remove auth gate if it exists (e.g. user signed in and came back)
-        const existing = document.getElementById('authGateOverlay');
-        if (existing) existing.remove();
+        showAuthGate();
     }
 
     // Wait for auth state to be ready
-    if (typeof window.kngAuth !== 'undefined' && window.kngAuth.isLoggedIn()) {
-        // Already ready and logged in
-    } else {
-        // Listen for auth ready event
-        window.addEventListener('kng-auth-ready', checkAuthAndInit);
-        // Also check after a short timeout in case event already fired
-        setTimeout(checkAuthAndInit, 1500);
-    }
+    window.addEventListener('kng-auth-ready', checkAuthAndInit);
+    // Fallback timeout in case event already fired before this script loaded
+    setTimeout(checkAuthAndInit, 1500);
 
     const haircutRadios = document.querySelectorAll('input[name="haircut"]');
     const extrasCheckboxes = document.querySelectorAll('input[name="extras"]');

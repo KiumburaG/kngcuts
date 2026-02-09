@@ -19,7 +19,7 @@
 .navbar, .hero, .services, .gallery, .contact, .footer,
 .booking-container, .success-container, .auth-container,
 .profile-container, .admin-calendar-container, .admin-dash-container,
-.toast-container, .confirm-overlay {
+.toast-container {
     position: relative;
     z-index: 1;
 }
