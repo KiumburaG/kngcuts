@@ -74,15 +74,36 @@ window.kngAuth.onReady(async function(authData) {
         showEditProfileModal(user, profile, displayName, avatarEl);
     });
 
-    // Avatar upload handler — opens crop modal
-    document.getElementById('avatarUpload').addEventListener('change', (e) => {
-        const file = e.target.files[0];
+    // Avatar upload handler — opens crop modal (with HEIC support)
+    document.getElementById('avatarUpload').addEventListener('change', async (e) => {
+        let file = e.target.files[0];
         if (!file) return;
 
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('Image must be under 5MB', 'warning');
+        if (file.size > 10 * 1024 * 1024) {
+            showToast('Image must be under 10MB', 'error');
             e.target.value = '';
             return;
+        }
+
+        // Convert HEIC/HEIF to JPEG
+        const name = file.name.toLowerCase();
+        if (name.endsWith('.heic') || name.endsWith('.heif') || file.type === 'image/heic' || file.type === 'image/heif') {
+            if (typeof heic2any !== 'undefined') {
+                try {
+                    showToast('Converting image format...', 'info');
+                    const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+                    file = new File([blob], file.name.replace(/\.heic|\.heif/i, '.jpg'), { type: 'image/jpeg' });
+                } catch (convErr) {
+                    console.error('HEIC conversion error:', convErr);
+                    showToast('Could not convert this image. Try a JPG or PNG instead.', 'error');
+                    e.target.value = '';
+                    return;
+                }
+            } else {
+                showToast('HEIC format not supported. Please use JPG or PNG.', 'error');
+                e.target.value = '';
+                return;
+            }
         }
 
         const reader = new FileReader();

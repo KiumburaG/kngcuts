@@ -158,10 +158,21 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
             setTimeout(() => {
                 window.location.href = getRedirect();
             }, 500);
-        } else {
-            showToast('Account created! Please check your email to verify your account.', 'info');
-            // Switch to sign in tab
+        } else if (data.user) {
+            // Auto-sign in the user (no email verification required)
+            try {
+                const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+                if (!signInError && signInData.session) {
+                    showToast('Account created! Signing you in...', 'success');
+                    setTimeout(() => {
+                        window.location.href = getRedirect();
+                    }, 500);
+                    return;
+                }
+            } catch (e) { /* fall through */ }
+            showToast('Account created! You can now sign in.', 'success');
             document.querySelector('.auth-tab[data-tab="signin"]').click();
+            document.getElementById('signinEmail').value = email;
         }
     } catch (error) {
         errorEl.textContent = error.message || 'Failed to create account';

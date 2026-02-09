@@ -39,7 +39,7 @@
                 <label class="profile-avatar-upload" for="avatarUpload" title="Change profile picture">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
                 </label>
-                <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
+                <input type="file" id="avatarUpload" accept="image/*,.heic,.heif" style="display:none;">
             </div>
             <div class="profile-info">
                 <h1 id="profileName">Loading...</h1>
@@ -98,6 +98,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
     <script src="supabase-config.js"></script>
     <script src="auth-state.js"></script>
     <script src="nav-auth.js"></script>
