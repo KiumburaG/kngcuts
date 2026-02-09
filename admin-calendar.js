@@ -169,8 +169,9 @@ document.getElementById('saveSchedule')?.addEventListener('click', async functio
     btn.textContent = 'Saving...';
 
     const schedule = {};
+    let validationError = null;
 
-    dayToggles.forEach(toggle => {
+    for (const toggle of dayToggles) {
         const day = toggle.dataset.day;
         const startTime = document.querySelector(`.start-time[data-day="${day}"]`);
         const endTime = document.querySelector(`.end-time[data-day="${day}"]`);
@@ -193,10 +194,8 @@ document.getElementById('saveSchedule')?.addEventListener('click', async functio
                 const bEnd = parseInt(breakEnd.value.split(':')[0], 10);
 
                 if (bStart < opStart || bEnd > opEnd || bStart >= bEnd) {
-                    showToast(`Invalid break time for ${day}: must be within operating hours`, 'error');
-                    btn.disabled = false;
-                    btn.textContent = originalText;
-                    return;
+                    validationError = `Invalid break time for ${day}: must be within operating hours`;
+                    break;
                 }
 
                 dayConfig.breakEnabled = true;
@@ -219,7 +218,14 @@ document.getElementById('saveSchedule')?.addEventListener('click', async functio
                 breakEnd: null
             };
         }
-    });
+    }
+
+    if (validationError) {
+        showToast(validationError, 'error');
+        btn.disabled = false;
+        btn.textContent = originalText;
+        return;
+    }
 
     try {
         await supabaseFetch('settings', 'POST', {
