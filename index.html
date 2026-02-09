@@ -186,25 +186,46 @@
     <script src="live-bg.js"></script>
     <script src="script.js"></script>
     <script>
-    // Fade out loading screen once page is ready
+    // Fade out loading screen after bar animation completes AND page is ready
     (function() {
         var screen = document.getElementById('loadingScreen');
         if (!screen) return;
 
+        var barDone = false;
+        var pageReady = false;
+        var dismissed = false;
+
         function dismiss() {
+            if (dismissed) return;
+            if (!barDone || !pageReady) return;
+            dismissed = true;
             screen.classList.add('fade-out');
             setTimeout(function() { screen.remove(); }, 600);
         }
 
-        // Wait for fonts + DOM to be fully ready
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(dismiss);
-        } else {
-            window.addEventListener('load', dismiss);
+        // Wait for the loading bar animation to finish (1.2s)
+        var bar = document.querySelector('.loading-bar-fill');
+        if (bar) {
+            bar.addEventListener('animationend', function() {
+                barDone = true;
+                dismiss();
+            });
         }
 
-        // Safety fallback — never block longer than 3s
-        setTimeout(dismiss, 3000);
+        // Wait for fonts + full page load
+        function onPageReady() {
+            pageReady = true;
+            dismiss();
+        }
+
+        if (document.fonts && document.fonts.ready) {
+            Promise.all([document.fonts.ready, new Promise(function(r) { window.addEventListener('load', r); })]).then(onPageReady);
+        } else {
+            window.addEventListener('load', onPageReady);
+        }
+
+        // Safety fallback — never block longer than 4s
+        setTimeout(function() { barDone = true; pageReady = true; dismiss(); }, 4000);
     })();
     </script>
 </body>

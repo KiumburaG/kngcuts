@@ -389,7 +389,7 @@ body {
     width: 0%;
     background: linear-gradient(90deg, #D4AF37, #f0d060);
     border-radius: 3px;
-    animation: loadingFill 1.2s ease-out forwards;
+    animation: loadingFill 2.4s ease-out forwards;
 }
 
 @keyframes loadingFill {
