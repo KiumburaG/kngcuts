@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KNGCuts - Professional Barbershop</title>
+    <meta name="description" content="Premium haircuts, fades, and grooming services in West Long Branch, NJ. Book your appointment online at KNGCuts barbershop.">
+    <meta name="keywords" content="barbershop, haircut, fade, trim, West Long Branch, NJ, KNGCuts, booking">
+    <meta property="og:title" content="KNGCuts - Professional Barbershop">
+    <meta property="og:description" content="Premium haircuts, fades, and grooming services. Book your appointment online.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kngcuts.com">
+    <meta property="og:image" content="https://kngcuts.com/favicon.svg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="KNGCuts - Professional Barbershop">
+    <meta name="twitter:description" content="Premium haircuts, fades, and grooming services. Book online now.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script>if(localStorage.getItem('kngcuts-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,16 +24,16 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">
+            <a href="index.html" class="logo" style="text-decoration:none;">
                 <span class="logo-text">K</span><span class="barber-pole">I</span><span class="logo-text">NG Cuts</span>
-            </div>
+            </a>
             <ul class="nav-menu">
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="bookings.html">Book Now</a></li>
                 <li><a href="#gallery">Gallery</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <li><button id="adminLoginBtn" class="admin-btn">Admin Login</button></li>
             </ul>
+            <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -30,7 +42,7 @@
         </div>
     </nav>
 
-    <section class="hero">
+    <section id="hero" class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1 class="hero-title">
@@ -48,24 +60,24 @@
 
     <section class="services">
         <div class="container">
-            <h2 class="section-title">Our Services</h2>
+            <h2 class="section-title">My Services</h2>
             <div class="services-grid">
                 <div class="service-card">
-                    <div class="service-icon">✂️</div>
+                    <div class="service-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="2"/><line x1="20" y1="4" x2="8.12" y2="15.88" stroke="#D4AF37" stroke-width="2"/><line x1="14.47" y1="14.48" x2="20" y2="20" stroke="#D4AF37" stroke-width="2"/><line x1="8.12" y1="8.12" x2="12" y2="12" stroke="currentColor" stroke-width="2"/></svg></div>
                     <h3>Fade</h3>
                     <p>Professional fade cuts with precision and style</p>
                     <span class="price">$25</span>
                     <p class="includes">Includes line-up</p>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">🪒</div>
+                    <div class="service-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/><rect x="15" y="8" width="6" height="3" rx="1" stroke="#D4AF37" stroke-width="1.5"/><rect x="15" y="13" width="6" height="3" rx="1" stroke="#D4AF37" stroke-width="1.5"/><line x1="6" y1="10" x2="12" y2="10" stroke="currentColor" stroke-width="1" opacity="0.4"/><line x1="6" y1="12" x2="12" y2="12" stroke="currentColor" stroke-width="1" opacity="0.4"/><line x1="6" y1="14" x2="12" y2="14" stroke="currentColor" stroke-width="1" opacity="0.4"/></svg></div>
                     <h3>Buzz Cut</h3>
                     <p>Clean and sharp buzz cut</p>
                     <span class="price">$15</span>
                     <p class="includes">Includes line-up</p>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">💈</div>
+                    <div class="service-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="18" rx="3" stroke="currentColor" stroke-width="2"/><line x1="7" y1="3" x2="17" y2="3" stroke="#D4AF37" stroke-width="2"/><line x1="7" y1="21" x2="17" y2="21" stroke="#D4AF37" stroke-width="2"/><line x1="9" y1="7" x2="15" y2="10" stroke="#D4AF37" stroke-width="1.5"/><line x1="9" y1="11" x2="15" y2="14" stroke="#D4AF37" stroke-width="1.5"/><line x1="9" y1="15" x2="15" y2="18" stroke="#D4AF37" stroke-width="1.5"/></svg></div>
                     <h3>Trim</h3>
                     <p>Detailed hair trim and shape-up</p>
                     <span class="price">$25</span>
@@ -93,8 +105,8 @@
 
     <section id="gallery" class="gallery">
         <div class="container">
-            <h2 class="section-title">Our Work</h2>
-            <p class="gallery-subtitle">Check out some of our fresh cuts</p>
+            <h2 class="section-title">My Work</h2>
+            <p class="gallery-subtitle">A selection of recent work and styles</p>
             <div id="galleryGrid" class="gallery-grid">
                 <!-- Images will be dynamically loaded here -->
                 <div class="gallery-placeholder">
@@ -105,81 +117,64 @@
         </div>
     </section>
 
+    <section id="reviews" class="reviews">
+        <div class="container">
+            <h2 class="section-title">What Clients Say</h2>
+            <p class="reviews-subtitle">Real reviews from real clients</p>
+            <div id="reviewsGrid" class="reviews-grid">
+                <div class="reviews-placeholder">
+                    <p>No reviews yet</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title">Get In Touch</h2>
             <div class="contact-info">
-                <div class="contact-item">
-                    <h3>📍 Location</h3>
+                <div class="contact-item accent-location">
+                    <div class="contact-icon-wrapper"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="#D4AF37" stroke-width="2"/></svg></div>
+                    <h3>Location</h3>
                     <p>84 Pinewood Ave<br>West Long Branch, NJ 07764</p>
                 </div>
-                <div class="contact-item">
-                    <h3>📞 Phone</h3>
-                    <p><a href="tel:+12014140921" style="color: inherit; text-decoration: none;">(201) 414-0921</a></p>
+                <div class="contact-item accent-phone">
+                    <div class="contact-icon-wrapper"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15.05 5A5 5 0 0119 8.95M15.05 1A9 9 0 0123 8.94" stroke="#D4AF37" stroke-width="2"/><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2"/></svg></div>
+                    <h3>Phone</h3>
+                    <p><a href="tel:+12014140921">(201) 414-0921</a></p>
                 </div>
-                <div class="contact-item">
-                    <h3>📧 Email</h3>
-                    <p><a href="mailto:kngcutsbarbershop@gmail.com" style="color: inherit; text-decoration: none;">kngcutsbarbershop@gmail.com</a></p>
+                <div class="contact-item accent-email">
+                    <div class="contact-icon-wrapper"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M22 7l-10 7L2 7" stroke="#D4AF37" stroke-width="2"/></svg></div>
+                    <h3>Email</h3>
+                    <p><a href="mailto:kngcutsbarbershop@gmail.com">kngcutsbarbershop@gmail.com</a></p>
                 </div>
-                <div class="contact-item">
-                    <h3>📱 Instagram</h3>
-                    <p><a href="https://instagram.com/kng.cuts" target="_blank" style="color: inherit; text-decoration: none;">@kng.cuts</a></p>
+                <div class="contact-item accent-social">
+                    <div class="contact-icon-wrapper"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" stroke="#D4AF37" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="#D4AF37"/></svg></div>
+                    <h3>Instagram</h3>
+                    <p><a href="https://instagram.com/kng.cuts" target="_blank">@kng.cuts</a></p>
                 </div>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3037.5!2d-74.017!3d40.297!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z84+Pinewood+Ave%2C+West+Long+Branch%2C+NJ+07764!5e0!3m2!1sen!2sus!4v1700000000000"
+                    width="100%" height="300" style="border:0; border-radius: 15px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    title="KNGCuts Location"></iframe>
             </div>
         </div>
     </section>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 KNGCuts. All rights reserved.</p>
+            <p>&copy; 2026 Kiumbura N. Githinji. All rights reserved.</p>
             <p>Professional Barbershop Services</p>
         </div>
     </footer>
 
-    <!-- Admin Login Modal -->
-    <div id="adminModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Admin Login</h2>
-            <div id="googleSignInButton" class="google-signin-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                Sign in with Google
-            </div>
-            <p class="modal-note">Access admin dashboard to manage images and calendar</p>
-        </div>
-    </div>
-
-    <!-- Admin Dashboard Modal -->
-    <div id="adminDashboard" class="modal">
-        <div class="modal-content dashboard-content">
-            <span class="close" id="closeDashboard">&times;</span>
-            <h2>Admin Dashboard</h2>
-            <div class="admin-info">
-                <p>Welcome, <span id="adminName"></span></p>
-                <button id="logoutBtn" class="logout-btn">Logout</button>
-            </div>
-
-            <div class="admin-sections">
-                <div class="admin-section">
-                    <h3>Upload Haircut Images</h3>
-                    <input type="file" id="imageUpload" accept="image/*" multiple>
-                    <button id="uploadBtn" class="upload-btn">Upload Images</button>
-                    <div id="uploadStatus"></div>
-                </div>
-
-                <div class="admin-section">
-                    <h3>Manage Gallery</h3>
-                    <div id="adminGallery" class="admin-gallery"></div>
-                </div>
-
-                <div class="admin-section">
-                    <h3>Quick Links</h3>
-                    <a href="admin-calendar.html" class="admin-link-btn">Manage Calendar & Availability</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth-state.js"></script>
+    <script src="nav-auth.js"></script>
+    <script src="dark-mode.js"></script>
+    <script src="live-bg.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

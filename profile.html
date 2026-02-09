@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - KNGCuts</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script>if(localStorage.getItem('kngcuts-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo" style="text-decoration:none;">
+                <span class="logo-text">K</span><span class="barber-pole">I</span><span class="logo-text">NG Cuts</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="bookings.html">Book Now</a></li>
+                <li><a href="index.html#gallery">Gallery</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar-wrapper">
+                <div class="profile-avatar" id="profileAvatar">?</div>
+                <label class="profile-avatar-upload" for="avatarUpload" title="Change profile picture">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </label>
+                <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
+            </div>
+            <div class="profile-info">
+                <h1 id="profileName">Loading...</h1>
+                <p class="profile-email" id="profileEmail"></p>
+                <p class="profile-since" id="profileSince"></p>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <div class="profile-section-header">
+                <h2>My Details</h2>
+                <button class="profile-edit-btn" id="editProfileBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Edit
+                </button>
+            </div>
+            <div class="profile-details" id="profileDetails">
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">Full Name</span>
+                    <span class="profile-detail-value" id="detailName">-</span>
+                </div>
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">Email</span>
+                    <span class="profile-detail-value" id="detailEmail">-</span>
+                </div>
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">Phone</span>
+                    <span class="profile-detail-value" id="detailPhone">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Upcoming Appointments</h2>
+            <div id="upcomingAppointments" class="profile-appointments">
+                <div class="profile-loading">Loading appointments...</div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Past Appointments</h2>
+            <div id="pastAppointments" class="profile-appointments">
+                <div class="profile-loading">Loading...</div>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="bookings.html" class="next-btn" style="text-align:center;text-decoration:none;display:inline-block;">Book New Appointment</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Kiumbura N. Githinji. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth-state.js"></script>
+    <script src="nav-auth.js"></script>
+    <script src="dark-mode.js"></script>
+    <script src="live-bg.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>

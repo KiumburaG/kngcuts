@@ -1,20 +1,9 @@
-# Firebase
-.firebase/
-.firebaserc
-firebase-debug.log
-firestore-debug.log
-ui-debug.log
-
 # Node modules
 node_modules/
-functions/node_modules/
 
 # Environment variables
 .env
 .env.local
-
-# Firebase config (IMPORTANT: Uncomment if you add real credentials)
-# config.js
 
 # IDE
 .vscode/
@@ -38,3 +27,19 @@ build/
 # Temporary files
 *.tmp
 .cache/
+
+# SSL certificates
+*.pem
+
+# Sensitive files
+Security Code/
+
+# Firebase (legacy)
+.firebase/
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Gallery uploads (managed in Supabase storage)
+gallery-photos/

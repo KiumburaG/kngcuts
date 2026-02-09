@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Calendar - KNGCuts</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script>if(localStorage.getItem('kngcuts-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,19 +14,24 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">
+            <a href="index.html" class="logo" style="text-decoration:none;">
                 <span class="logo-text">K</span><span class="barber-pole">I</span><span class="logo-text">NG Cuts</span>
-            </div>
+            </a>
             <ul class="nav-menu">
+                <li><a href="admin-dashboard.html">Back to Dashboard</a></li>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="#" class="active">Admin Calendar</a></li>
-                <li><button id="logoutBtn" class="admin-btn">Logout</button></li>
+                <li><a href="#" class="active">Calendar</a></li>
             </ul>
+            <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
         </div>
     </nav>
 
     <div class="admin-calendar-container">
         <div class="admin-header">
+            <a href="admin-dashboard.html" class="back-to-dash">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Back to Dashboard
+            </a>
             <h1>Manage Calendar & Availability</h1>
             <p>Set your available hours and manage appointments</p>
         </div>
@@ -148,14 +155,16 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 KNGCuts. All rights reserved.</p>
+            <p>&copy; 2026 Kiumbura N. Githinji. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth-state.js"></script>
+    <script src="nav-auth.js"></script>
+    <script src="dark-mode.js"></script>
+    <script src="live-bg.js"></script>
     <script src="admin-calendar.js"></script>
 </body>
 </html>
