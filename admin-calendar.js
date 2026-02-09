@@ -90,11 +90,16 @@ dayToggles.forEach(toggle => {
 });
 
 // Save Schedule
-document.getElementById('saveSchedule')?.addEventListener('click', async () => {
+document.getElementById('saveSchedule')?.addEventListener('click', async function() {
     if (!supabase) {
         showToast('Supabase not configured', 'error');
         return;
     }
+
+    const btn = this;
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
 
     const schedule = {};
 
@@ -128,10 +133,13 @@ document.getElementById('saveSchedule')?.addEventListener('click', async () => {
 
         if (error) throw error;
 
-        showToast('Schedule saved successfully!', 'success');
+        showSuccessPopup('Schedule Saved', 'Your weekly availability has been updated successfully.');
     } catch (error) {
         console.error('Error saving schedule:', error);
-        showToast('Error saving schedule. Please try again.', 'error');
+        showToast('Error saving schedule: ' + (error.message || 'Please try again.'), 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
     }
 });
 
@@ -255,6 +263,38 @@ async function loadBlockedDates() {
     } catch (error) {
         console.error('Error loading blocked dates:', error);
     }
+}
+
+// Success Confirmation Popup
+function showSuccessPopup(title, message) {
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-overlay';
+    overlay.innerHTML = `
+        <div class="confirm-modal success-popup">
+            <div class="success-popup-circle">
+                <svg viewBox="0 0 52 52" class="success-checkmark">
+                    <circle cx="26" cy="26" r="25" fill="none" class="success-checkmark-circle"/>
+                    <path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" class="success-checkmark-check"/>
+                </svg>
+            </div>
+            <h3>${title}</h3>
+            <p>${message}</p>
+            <div class="confirm-modal-actions">
+                <button class="confirm-btn-save success-popup-ok">OK</button>
+            </div>
+        </div>
+    `;
+
+    function closeModal() {
+        overlay.style.animation = 'confirmFadeOut 0.2s ease forwards';
+        setTimeout(() => overlay.remove(), 200);
+    }
+
+    overlay.querySelector('.success-popup-ok').addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+    document.body.appendChild(overlay);
+
+    setTimeout(() => { if (overlay.parentNode) closeModal(); }, 3000);
 }
 
 // Styled Confirmation Modal
